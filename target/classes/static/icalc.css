@@ -1,0 +1,188 @@
+* {
+    color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(0, 0, 0, 1);
+    animation: backgroundchg 3s 1;
+
+}
+
+
+#master{
+    width:550px;
+    height:400px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -200px;
+    margin-left: -275px;
+    border: 1px inset rgba(255, 255, 255, 0.5);
+    text-align: center;
+    font-size: 1.25rem; /* 20 */
+    display: inline-block;
+    background-color: rgba(0, 0, 18, 1);
+    animation: border-visible 4s 1;
+}
+
+
+.cursor{background-color: rgba(0, 0, 18, 1);
+    margin-block-start: 0;
+    margin-block-end: 0;
+}
+
+#box_cursor{
+    margin-block-start: 0;
+    margin-block-end: 0;
+    text-align: left;
+    font-size: 0.9rem; /* 20 */
+    background-color: rgba(0, 0, 0, 1);
+    animation: cursor-visible 4s 1;
+    }
+#box_cursor1{
+    background-color: rgba(0, 0, 0, 1);
+    animation: cursor-visible 5s 1;
+}
+#box_cursor2{
+    background-color: rgba(0, 0, 0, 1);
+    animation: cursor-visible 6s 1;
+}
+#box_cursor3{
+    background-color: rgba(0, 0, 0, 1);
+    animation: cursor-visible 7s 1;
+}
+#box_cursor4{
+    background-color: rgba(0, 0, 0, 1);
+    animation: cursor-visible 8s 1;
+}
+
+
+.box__uploading,
+.box__success,
+.box__error ,#animatetext1,#animatetext2,#animatetext3
+{
+    display: none;
+}
+ .box
+{
+     padding: 120px 0;
+ }
+
+
+#draganddrop,.box__input {
+    background-color: #000012;
+}
+
+.box__icon
+{
+    width: 100%;
+    height: 80px;
+    fill: papayawhip;
+    display: block;
+    background-color: #000012;
+    margin-bottom: 40px;
+}
+
+.box__file
+{
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+    background-color: #000012;
+}
+
+
+
+.box.has-advanced-upload .box__dragndrop
+{
+    display: inline;
+    background-color: #000012;
+}
+
+.box.has-advanced-upload
+{
+    outline: 2px dashed #92b0b3;
+    outline-offset: -10px;
+
+    -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+    transition: outline-offset .15s ease-in-out, background-color .15s linear;
+}
+
+.box.has-advanced-upload {
+    outline: 2px dashed black;
+    outline-offset: -10px;
+}
+.box.has-advanced-upload .box__dragndrop {
+    display: inline;
+}
+
+.box.is-dragover {
+    background-color: grey;
+}
+
+
+@keyframes backgroundchg {
+    0% {
+        background-image:  url('noise.gif');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: 100% 100%;
+    }
+    50% {
+        background-image:  url('noise.gif');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: 100% 100%;
+        background-color: rgba(0, 0, 0, 0);
+    }
+    100% {
+        background-color: rgba(0, 0, 0, 1);
+    }
+}
+
+@keyframes border-visible {
+    0%   { border: 1px inset rgba(255, 255, 255, 0);
+           background-color: rgba(0, 0, 18, 0);}
+    100%  { border: 1px inset rgba(255, 255, 255, 0.5);
+           background-color: rgba(0, 0, 18, 1);
+         }
+}
+
+
+@keyframes cursor-visible {
+    0%   {
+        background-color: rgba(0, 0, 18, 1);
+        opacity: 0;
+    }
+    90% {
+        background-color: rgba(0, 0, 18, 1);
+        opacity: 0;
+    }
+    100% {
+        background-color: rgba(0, 0, 18, 1);
+        opacity: 1;
+
+    }
+}
+
+@media only screen
+and (min-width : 450px)
+and (max-width : 600px) {
+    #master{
+        width:400px;
+        height:600px;
+        margin-top: -300px;
+        margin-left: -200px;
+    }
+}
+
+@media only screen
+and (min-width : 10px)
+and (max-width : 450px) {
+    #master{
+    width:300px;
+    height:600px;
+    margin-top: -300px;
+    margin-left: -150px;
+    }
+}
