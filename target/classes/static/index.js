@@ -48,6 +48,7 @@ dropArea.addEventListener("drop", (event)=>{
     for (const i of  event.dataTransfer.files) {
         if (i.name.includes('.dxf')  || i.name.includes('.DXF')) {
             formData.append('files', i);
+            console.log(formData)
         }
         else
         {
