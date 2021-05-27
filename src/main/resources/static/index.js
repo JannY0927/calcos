@@ -5,22 +5,6 @@ let file;
 
 console.log("fileType: ")
 
-function uploadFile (uploadFile) {
-    const DxfParser = require('dxf-parser');
-    const fs = require('fs');
-    const util = require('util');
-
-    uploadFile = fs.readFileSync(uploadFile, 'utf-8');
-
-    var parser = new DxfParser();
-    try {
-        var result = parser.parseSync(uploadFile);
-        console.log(util.inspect(result, false, null, true))
-    }catch(err) {
-        return console.error(err.stack);
-    }
-}
-
 input.addEventListener("change", function(){
     file = this.files[0];
     dropArea.classList.add("active");
@@ -57,9 +41,10 @@ dropArea.addEventListener("drop", (event)=>{
             dragText.textContent = "Drag & Drop to Upload File";
         }
     }
+    dragText.textContent = "Let's work";
     fetch("/upload", {
         method: "POST",
         body: formData
     })
+    setTimeout(function(){ window.location.replace("/result.html") }, 1000);
 });
-

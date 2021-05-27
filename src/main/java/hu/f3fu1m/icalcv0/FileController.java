@@ -18,11 +18,12 @@ public class FileController {
 
 
     @PostMapping("/upload")
-    public String uploadFile(@RequestParam("formData") MultipartFile formData, RedirectAttributes redirectAttributes) {
+    public void uploadFile(@RequestParam("files") MultipartFile formData, RedirectAttributes redirectAttributes) throws IOException {
         System.out.println("contorller");
         fileService.upload(formData);
-        System.out.println(formData.getOriginalFilename() + "!");
-        return "OK";
+        System.out.println(formData.getOriginalFilename());
+        dxfFile uploadedFile = new dxfFile(formData.getOriginalFilename());
+        uploadedFile.readFile("src/main/resources/static/"+formData.getOriginalFilename());
     }
 
   /*  @PostMapping("/upload")

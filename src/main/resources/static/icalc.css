@@ -1,7 +1,6 @@
 * {
-    color: rgba(255, 255, 255, 0.5);
-    background-color: rgba(0, 0, 0, 1);
-    animation: backgroundchg 3s 1;
+    background-color: rgba(0, 0, 0, 0.3);
+    animation: backgroundchg 4s 1;
 
 }
 
@@ -18,12 +17,12 @@
     text-align: center;
     font-size: 1.25rem; /* 20 */
     display: inline-block;
-    background-color: rgba(0, 0, 18, 1);
+    background-color: rgba(0, 0, 0, 1);
     animation: border-visible 4s 1;
 }
 
 
-.cursor{background-color: rgba(0, 0, 18, 1);
+.cursor{
     margin-block-start: 0;
     margin-block-end: 0;
 }
@@ -33,24 +32,49 @@
     margin-block-end: 0;
     text-align: left;
     font-size: 0.9rem; /* 20 */
-    background-color: rgba(0, 0, 0, 1);
+    color: rgba(255, 255, 255, 0.5);
     animation: cursor-visible 4s 1;
-    }
+}
+
 #box_cursor1{
-    background-color: rgba(0, 0, 0, 1);
+    margin-block-start: 0;
+    margin-block-end: 0;
+    text-align: left;
+    font-size: 0.9rem; /* 20 */
+    color: rgba(255, 255, 255, 0.5);
     animation: cursor-visible 5s 1;
 }
 #box_cursor2{
-    background-color: rgba(0, 0, 0, 1);
+    margin-block-start: 0;
+    margin-block-end: 0;
+    text-align: left;
+    font-size: 0.9rem; /* 20 */
+    color: rgba(255, 255, 255, 0.5);
     animation: cursor-visible 6s 1;
 }
 #box_cursor3{
-    background-color: rgba(0, 0, 0, 1);
+    margin-block-start: 0;
+    margin-block-end: 0;
+    text-align: left;
+    font-size: 0.9rem; /* 20 */
+    color: rgba(255, 255, 255, 0.5);
     animation: cursor-visible 7s 1;
 }
 #box_cursor4{
-    background-color: rgba(0, 0, 0, 1);
+    margin-block-start: 0;
+    margin-block-end: 0;
+    text-align: left;
+    font-size: 0.9rem; /* 20 */
+    color: rgba(255, 255, 255, 0.5);
     animation: cursor-visible 8s 1;
+}
+
+#box_cursor5{
+    margin-block-start: 0;
+    margin-block-end: 0;
+    text-align: left;
+    font-size: 0.9rem; /* 20 */
+    color: rgba(255, 255, 255, 0.5);
 }
 
 
@@ -60,14 +84,18 @@
 {
     display: none;
 }
- .box
+.box
 {
-     padding: 120px 0;
- }
+    padding: 60px 0;
+    text-align: center;
+    font-size: 1.4rem;
+    color: papayawhip;
+}
 
 
 #draganddrop,.box__input {
-    background-color: #000012;
+    color: papayawhip;
+    animation: cursor-visible 9s 1;
 }
 
 .box__icon
@@ -76,7 +104,6 @@
     height: 80px;
     fill: papayawhip;
     display: block;
-    background-color: #000012;
     margin-bottom: 40px;
 }
 
@@ -88,7 +115,6 @@
     overflow: hidden;
     position: absolute;
     z-index: -1;
-    background-color: #000012;
 }
 
 
@@ -96,7 +122,6 @@
 .box.has-advanced-upload .box__dragndrop
 {
     display: inline;
-    background-color: #000012;
 }
 
 .box.has-advanced-upload
@@ -128,39 +153,39 @@
         background-attachment: fixed;
         background-size: 100% 100%;
     }
-    50% {
+    70% {
         background-image:  url('noise.gif');
         background-repeat: no-repeat;
         background-attachment: fixed;
         background-size: 100% 100%;
         background-color: rgba(0, 0, 0, 0);
     }
-    100% {
-        background-color: rgba(0, 0, 0, 1);
+    100% {background-color: rgba(0, 0, 0, 0.3);
     }
 }
 
 @keyframes border-visible {
     0%   { border: 1px inset rgba(255, 255, 255, 0);
-           background-color: rgba(0, 0, 18, 0);}
+        background-color: rgba(0, 0, 0, 0);
+    }
     100%  { border: 1px inset rgba(255, 255, 255, 0.5);
-           background-color: rgba(0, 0, 18, 1);
-         }
+        background-color: rgba(0, 0, 0, 1);
+    }
 }
 
 
 @keyframes cursor-visible {
     0%   {
-        background-color: rgba(0, 0, 18, 1);
         opacity: 0;
+        background-color: rgba(0, 0, 0, 0);
     }
     90% {
-        background-color: rgba(0, 0, 18, 1);
         opacity: 0;
+        background-color: rgba(0, 0, 0, 0);
     }
     100% {
-        background-color: rgba(0, 0, 18, 1);
         opacity: 1;
+        background-color: rgba(0, 0, 0, 1);
 
     }
 }
@@ -180,9 +205,9 @@ and (max-width : 600px) {
 and (min-width : 10px)
 and (max-width : 450px) {
     #master{
-    width:300px;
-    height:600px;
-    margin-top: -300px;
-    margin-left: -150px;
+        width:300px;
+        height:600px;
+        margin-top: -300px;
+        margin-left: -150px;
     }
 }
