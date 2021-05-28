@@ -38,8 +38,8 @@ public class dxfFile {
         String row = br.readLine();
         int counter = 1;
         while(row !=null) {
-           // System.out.println(row);
-            if (row.equals("type")) {
+            System.out.println(row);
+            if (row.equals(type)) {
                 System.out.println("counter: " + counter);
                 findCoordinatas = true;
             }
