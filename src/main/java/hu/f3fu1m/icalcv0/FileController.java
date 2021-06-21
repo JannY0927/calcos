@@ -1,6 +1,5 @@
 package hu.f3fu1m.icalcv0;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +18,16 @@ public class FileController {
 
     @PostMapping("/upload")
     public void uploadFile(@RequestParam("files") MultipartFile formData, RedirectAttributes redirectAttributes) throws IOException {
+        System.out.println("contorller");
+        fileService.upload(formData);
+        System.out.println(formData.getOriginalFilename());
+        dxfFile uploadedFile = new dxfFile(formData.getOriginalFilename());
+        uploadedFile.readFile("src/main/resources/static/"+formData.getOriginalFilename());
+    }
+
+
+    @PostMapping("/result")
+    public void result(@RequestParam("files") MultipartFile formData, RedirectAttributes redirectAttributes) throws IOException {
         System.out.println("contorller");
         fileService.upload(formData);
         System.out.println(formData.getOriginalFilename());

@@ -1,5 +1,8 @@
 package hu.f3fu1m.icalcv0;
 
+import hu.f3fu1m.icalcv0.Database.FileBasicData;
+import hu.f3fu1m.icalcv0.Database.FileBasicDataRepository;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -67,6 +70,14 @@ public class dxfFile {
                     parsingObj.setEnd(new Coordinata(Float.parseFloat(ex),Float.parseFloat(ey),Float.parseFloat(ez)));
                     result.add(parsingObj);
                     System.out.println("Pars: " + parsingObj.toString());
+                    //mentéps Db-be
+                    //visszarajzolás
+                    FileBasicData fileBasicData = new FileBasicData();
+                    fileBasicData.setName("Teszt1");
+                    FileBasicDataRepository a = new FileBasicDataRepository();
+                    a.insert(fileBasicData);
+                    System.out.println("Id"+fileBasicData.getId());
+
                     sx = null;sy = null;sz = null;ex = null;ey = null;ez  = null;
                     findCoordinatas = false;
                 }
