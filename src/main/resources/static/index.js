@@ -8,7 +8,6 @@ console.log("fileType: ")
 input.addEventListener("change", function(){
     file = this.files[0];
     dropArea.classList.add("active");
-    showFile(); //calling function
 });
 
 
@@ -24,6 +23,8 @@ dropArea.addEventListener("dragleave", ()=>{
     dropArea.classList.remove("active");
     dragText.textContent = "Choose The DXF file or drag it here.";
 });
+
+//result backwrite
 
 //If user drop File on DropArea
 dropArea.addEventListener("drop", (event)=>{
@@ -46,5 +47,6 @@ dropArea.addEventListener("drop", (event)=>{
         method: "POST",
         body: formData
     })
-    setTimeout(function(){ window.location.replace("/result.html") }, 1000);
+    animateCanvas();
+    //setTimeout(function(){ window.location.replace("/result.html") }, 1000);
 });
