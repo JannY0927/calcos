@@ -25,10 +25,7 @@ public class EntityProperty  {
 
     @Override
     public String toString() {
-        return "EntityProperty{" +
-                "id=" + propertyType +
-                ", value='" + value + '\'' +
-                '}';
+        return "EntityProperty{id=" + propertyType + ", value='" + value + '\'' +'}';
     }
 
     public void setValue(String value) {

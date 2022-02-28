@@ -45,14 +45,14 @@ class Entity {
 
     }
 
-    getAllPoints(isHasBulge41){
+    getAllPoints(isHasBulge41,bulgeType){
         let points = []
         let point = {};
         for (let i=0;i< this.Entityproperties.length;i++)   {
 
             this.Entityproperties[i].propertyType === ' 10' ? point.x = this.Entityproperties[i].propertyValue == null ? 0.0 : this.Entityproperties[i].propertyValue : null;
             this.Entityproperties[i].propertyType === ' 20' ? point.y = this.Entityproperties[i].propertyValue == null ? 0.0 : this.Entityproperties[i].propertyValue : null;
-            this.Entityproperties[i].propertyType === ' 41' ? point.b = this.Entityproperties[i].propertyValue == null ? 0.0 : this.Entityproperties[i].propertyValue : null;
+            this.Entityproperties[i].propertyType === bulgeType ? point.b = this.Entityproperties[i].propertyValue == null ? 0.0 : this.Entityproperties[i].propertyValue : null;
             if (isHasBulge41) {
                 if (point.x != null && point.y != null && point.y != null && point.b != null) {
                     points.push(point)
@@ -261,7 +261,7 @@ class EntityHatch extends Entity {
         drawContext.strokeStyle = "#ffffff";
         drawContext.beginPath();
         let points = [];
-        points = this.getAllPoints(true);
+        points = this.getAllPoints(true," 41");
 
         points.shift();
         //első pontot ki kell hagyni mert az technikai a Hatch entitybe a tömb második elemétől indulunk
@@ -285,6 +285,57 @@ class EntityHatch extends Entity {
                 drawContext.stroke();
             }
             if (p1.b != 0.0) {
+                this.drawBulgeBetweenTwoPoints(p1, p2, drawContext);
+            }
+        }
+    }
+
+}
+
+class EntityLWPolyline extends Entity {
+    constructor(type, Entityproperties) {
+        super(type, Entityproperties);
+    }
+
+    draw() {
+        let drawContext = drawSheet.getContext('2d');
+        drawContext.lineWidth = this.findValue(' 43')==null ? defaultLineWidth : this.findValue(' 43');
+        drawContext.strokeStyle = "#ffffff";
+        drawContext.beginPath();
+        let points = [];
+        console.log('LWPolyLine Start')
+        points = this.getAllPoints(true," 42");
+        console.log("Lne",points.length);
+
+        for (let i = 0; i < points.length; i++) {
+            let p1 = points[i];
+            let p2 = null;
+
+            if (p1 !== points[(points.length) - 1]) {
+                console.log("Vége pont")
+                p2 = points[i + 1];
+            }
+            else {
+                if (this.findValue(' 70')== 1) {
+                    console.log("P2 after", p2)
+                    p2 = points[0];
+                }
+                else {
+                    console.log("P2 afte elser", p2)
+                    p2 = points[i];
+                }
+            }
+
+            if (p1.b === 0.0) {
+                console.log('LWPolyLine Start LINE p1: ',p1,' p2 ',p2);
+                drawContext.beginPath();
+                drawContext.moveTo(p1.x, p1.y);
+                drawContext.lineTo(p2.x, p2.y);
+                drawContext.stroke();
+
+            }
+            if (p1.b != 0.0) {
+                console.log('LWPolyLine Start Bulge')
                 this.drawBulgeBetweenTwoPoints(p1, p2, drawContext);
             }
         }
@@ -396,7 +447,7 @@ function findValue(entityProperties,propertyType) {
 }
 
 
-function animateCanvas() {
+function animateCanvas(dxfFileEntityData) {
     master.style.animation = "zoomIn 2s";
     drawSheet.width = window.innerWidth*0.9;
     drawSheet.height = window.innerHeight*0.9;
@@ -526,6 +577,22 @@ function animateCanvas() {
     entityproperty.push(new EntityProperty(' 41',0));
     const entity11 = new EntityHatch("HATCH",entityproperty);
 
+    entityproperty = [];
+    entityproperty.push(new EntityProperty(' 70',0));
+    entityproperty.push(new EntityProperty(' 10',500));
+    entityproperty.push(new EntityProperty(' 20',500));
+    entityproperty.push(new EntityProperty(' 42',1.1));
+    entityproperty.push(new EntityProperty(' 10',600));
+    entityproperty.push(new EntityProperty(' 20',600));
+    entityproperty.push(new EntityProperty(' 42',0));
+    entityproperty.push(new EntityProperty(' 10',550));
+    entityproperty.push(new EntityProperty(' 20',600));
+    entityproperty.push(new EntityProperty(' 42',0));
+    entityproperty.push(new EntityProperty(' 10',550));
+    entityproperty.push(new EntityProperty(' 20',600));
+    entityproperty.push(new EntityProperty(' 42',0));
+    const entity12 = new EntityLWPolyline("LWPOLYLINE",entityproperty);
+
 
 
     entitiesArray.push(entity);
@@ -540,6 +607,7 @@ function animateCanvas() {
     entitiesArray.push(entity9);
     entitiesArray.push(entity10);
     //entitiesArray.push(entity11);
+    entitiesArray.push(entity12);
 
     setTimeout(function () {
         entitiesArray.forEach(write);

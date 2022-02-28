@@ -2,6 +2,10 @@ package hu.f3fu1m.icalcv0;
 
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+
 public class Entity {
     String type;
     List<EntityProperty> entityProperties;
@@ -27,6 +31,32 @@ public class Entity {
         this.entityProperties = entityProperties;
     }
 
+	@Override
+	public String toString() {
+		return "Entity [type=" + type + ", entityProperties=" + entityProperties + "]";
+	}
+	
+	public String toJson() {
+	    ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+
+	    StringBuilder sb = new StringBuilder()
+				.append("{")
+				.append("\"type\": \"" + type + "\",")
+				.append("\"entityProperties\": [");
+		entityProperties.forEach(ep -> {
+			try {
+				sb.append(ow.writeValueAsString(ep) + ",");
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
+		});
+		sb.setLength(sb.length() - 1);
+		sb.append("]");
+		sb.append("}\n");
+		return sb.toString();	
+	}
+	
+
     /*@Override
     public String toString() {
         String concatEntProp = null;
@@ -40,4 +70,5 @@ public class Entity {
 
         return "Entities{type=" + this.type + "Prop" + concatEntProp + "}";
     }*/
+    
 }

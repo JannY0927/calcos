@@ -3,16 +3,20 @@ package hu.f3fu1m.icalcv0;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class dxfFile {
+
+import com.google.gson.Gson;
+
+public class DxfFile {
     String filename;
     List<Entity> entities;
 
-    public dxfFile(String filename, List<Entity> entities) {
+    public DxfFile(String filename) {
         this.filename = filename;
-        this.entities = entities;
+        this.entities = new ArrayList<>();;
     }
 
     public String getFilename() {
@@ -104,5 +108,23 @@ public class dxfFile {
                     this.entities.get(i).getEntityProperties().size());
         }
     }
+
+	public String toJson() {
+		StringBuilder sb = new StringBuilder()
+				.append("{")
+				.append("\"filename\": \"" + filename + "\",")
+				.append("\"entities\": [");
+		entities.forEach(e -> sb.append(e.toJson() + ","));
+		sb.setLength(sb.length() - 1);
+		sb.append("]");
+		sb.append("}");
+		return sb.toString();	
+	}
+    
+	@Override
+	public String toString() {
+		return "DxfFile [filename=" + filename + ", entities=" + entities + "]";
+	}
+    
 }
 
