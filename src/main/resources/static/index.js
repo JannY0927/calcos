@@ -29,7 +29,6 @@ dropArea.addEventListener("dragleave", ()=>{
 //If user drop File on DropArea
 dropArea.addEventListener("drop", (event)=>{
     event.preventDefault();
-    let response;
     const formData = new FormData()
     for (const i of  event.dataTransfer.files) {
         if (i.name.includes('.dxf')  || i.name.includes('.DXF')) {
@@ -48,9 +47,8 @@ dropArea.addEventListener("drop", (event)=>{
         method: "POST",
         body: formData
     }).then(function(response) {
-	    console.log("POST end");
-		console.log("eztlátod",response.json());
-    //animateCanvas();
-	})
+        console.log("POST end");
+        console.log("animateCanva",response.json());
+    });
     //setTimeout(function(){ window.location.replace("/result.html") }, 1000);
 });

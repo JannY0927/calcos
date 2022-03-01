@@ -3,6 +3,14 @@ let drawSheet = document.getElementById('sheet_backdraw');
 let master = document.getElementById('master');
 let defaultLineWidth = 3;
 
+class DXFFile  {
+    constructor(fileName,Entities) {
+        this.fileName = fileName;
+        this.Entities = Entities;
+    }
+}
+
+
 class Entity {
     constructor(type,Entityproperties) {
         this.type = type;
@@ -448,6 +456,10 @@ function findValue(entityProperties,propertyType) {
 
 
 function animateCanvas(dxfFileEntityData) {
+    console.log(dxfFileEntityData);
+    const dxfFile  = new DXFFile();
+   // dxfFile = JSON.parse();
+    console.log(dxfFile);
     master.style.animation = "zoomIn 2s";
     drawSheet.width = window.innerWidth*0.9;
     drawSheet.height = window.innerHeight*0.9;

@@ -27,12 +27,11 @@ public class FileController {
         System.out.println(formData.getOriginalFilename());
         DxfFile uploadedFile = new DxfFile(formData.getOriginalFilename());
         uploadedFile.readFile("src/main/resources/static/"+formData.getOriginalFilename());
-        ObjectMapper objectMapper = new ObjectMapper();
 //        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(uploadedFile.toJson());
         
 //        response.setContentType("application/json");
         
-        return objectMapper.valueToTree(uploadedFile.toJson()).toPrettyString();
+        return uploadedFile.toJson();
     }
 
     @GetMapping("/result")

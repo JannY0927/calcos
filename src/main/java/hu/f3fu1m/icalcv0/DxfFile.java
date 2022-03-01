@@ -111,14 +111,13 @@ public class DxfFile {
 
 	public String toJson() {
 		StringBuilder sb = new StringBuilder()
-				.append("{")
-				.append("\"filename\": \"" + filename + "\",")
-				.append("\"entities\": [");
+				.append("{\"filename\": \"" + filename + "\",\"entities\": [");
+        System.out.println(sb);
 		entities.forEach(e -> sb.append(e.toJson() + ","));
 		sb.setLength(sb.length() - 1);
 		sb.append("]");
 		sb.append("}");
-		return sb.toString();	
+		return sb.toString();
 	}
     
 	@Override
