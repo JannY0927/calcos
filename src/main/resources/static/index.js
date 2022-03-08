@@ -29,7 +29,8 @@ dropArea.addEventListener("dragleave", ()=>{
 //If user drop File on DropArea
 dropArea.addEventListener("drop", (event)=>{
     event.preventDefault();
-    const formData = new FormData()
+    const formData = new FormData();
+    const dxfToJson = {};
     for (const i of  event.dataTransfer.files) {
         if (i.name.includes('.dxf')  || i.name.includes('.DXF')) {
             formData.append('files', i);
@@ -46,9 +47,10 @@ dropArea.addEventListener("drop", (event)=>{
     fetch("/upload", {
         method: "POST",
         body: formData
-    }).then(function(response) {
-        console.log("POST end");
-        console.log("animateCanva",response.json());
-    });
+    })
+        .then(response=> response.json())
+        .then(data => animateCanvas(data));
+    console.log("Json full",dxfToJson);
+    console.log(dxfToJson.filename);
     //setTimeout(function(){ window.location.replace("/result.html") }, 1000);
 });

@@ -4,9 +4,14 @@ let master = document.getElementById('master');
 let defaultLineWidth = 3;
 
 class DXFFile  {
-    constructor(fileName,Entities) {
+    constructor(fileName,Entities,mySize) {
         this.fileName = fileName;
         this.Entities = Entities;
+        this.mySize = mySize;
+    }
+
+    getMyRate(screenSize) {
+
     }
 }
 
@@ -316,6 +321,7 @@ class EntityLWPolyline extends Entity {
         console.log("Lne",points.length);
 
         for (let i = 0; i < points.length; i++) {
+            console.log(points[i]);
             let p1 = points[i];
             let p2 = null;
 
@@ -364,49 +370,68 @@ class Entity3DFace extends Entity {
         if (binaryLineVisibility.charAt(3)==='0') {
             console.log('1line');
 
-            drawContext.moveTo(
-                this.findValue(' 10'),
-                this.findValue(' 20')
-            )
-            drawContext.lineTo(
-                this.findValue(' 11'),
-                this.findValue(' 21')
-            )
+            drawContext.moveTo(this.findValue(' 10'),this.findValue(' 20'))
+            drawContext.lineTo(this.findValue(' 11'),this.findValue(' 21'))
         }
         if (binaryLineVisibility.charAt(2)==='0') {
             console.log('2line');
-            drawContext.moveTo(
-                this.findValue(' 11'),
-                this.findValue(' 21')
-            )
-            drawContext.lineTo(
-                this.findValue(' 12'),
-                this.findValue(' 22')
-            )
+            drawContext.moveTo(this.findValue(' 11'),    this.findValue(' 21'))
+            drawContext.lineTo(this.findValue(' 12'),this.findValue(' 22'))
         }
         if (binaryLineVisibility.charAt(1)==='0') {
             console.log('3line');
-            drawContext.moveTo(
-                this.findValue(' 12'),
-                this.findValue(' 22')
-            )
-            drawContext.lineTo(
-                this.findValue(' 13'),
-                this.findValue(' 23')
-            )
+            drawContext.moveTo(this.findValue(' 12'),this.findValue(' 22'))
+            drawContext.lineTo(this.findValue(' 13'),this.findValue(' 23'))
         }
         if (binaryLineVisibility.charAt(0)==='0') {
             console.log('4line');
-            drawContext.moveTo(
-                this.findValue(' 13'),
-                this.findValue(' 23')
-            )
-            drawContext.lineTo(
-                this.findValue(' 10'),
-                this.findValue(' 20')
-            )
+            drawContext.moveTo(this.findValue(' 13'),this.findValue(' 23'))
+            drawContext.lineTo(this.findValue(' 10'),this.findValue(' 20'))
         }
         drawContext.stroke();
+    }
+
+}
+
+class  EntityPoint extends Entity {
+    constructor(type,Entityproperties) {
+        super(type, Entityproperties);
+    }
+
+    draw() {
+        let drawContext = drawSheet.getContext('2d');
+        drawContext.strokeStyle = "#ffffff";
+        drawContext.beginPath();
+        drawContext.arc(this.findValue(' 10'),this.findValue(' 20'),
+            this.findValue(' 39'),0, Math.PI * 2, true);
+        drawContext.fill();
+    }
+
+}
+
+class EntitySolid extends Entity {
+    constructor(type,Entityproperties) {
+        super(type, Entityproperties);
+    }
+
+    draw() {
+        let drawContext = drawSheet.getContext('2d');
+        drawContext.lineWidth = this.findValue(' 39')==null ? defaultLineWidth : this.findValue(' 39');
+        drawContext.strokeStyle = "#ffffff";
+        drawContext.fillStyle = "#ffffff";
+        drawContext.beginPath();
+
+        drawContext.moveTo(this.findValue(' 10'),this.findValue(' 20'))
+        drawContext.lineTo(this.findValue(' 11'),this.findValue(' 21'))
+
+        drawContext.lineTo(this.findValue(' 12'),this.findValue(' 22'))
+
+
+        if (this.findValue(' 13') > 0)
+            drawContext.lineTo(this.findValue(' 13'),this.findValue(' 23'));
+        else
+            drawContext.lineTo(this.findValue(' 10'),this.findValue(' 20'));
+        drawContext.fill();
     }
 
 }
@@ -451,15 +476,83 @@ function findValue(entityProperties,propertyType) {
             return entityProperties[i].propertyValue;
         }
     }
-    
+
 }
 
+//KI kell találni hova kerül az arány, és melyik részét hogyan fogom tudni írni.
 
 function animateCanvas(dxfFileEntityData) {
-    console.log(dxfFileEntityData);
-    const dxfFile  = new DXFFile();
-   // dxfFile = JSON.parse();
-    console.log(dxfFile);
+    console.log("ez a fájlopm",dxfFileEntityData);
+    let jsonEntities = [];
+    let jsonEntityProperties = [];
+    picSize = {minX : 0,minY:0, maxX : 0,maxY:0};
+    for (let i = 0;i<dxfFileEntityData.entities.length;i++) {
+        console.log("Entiti", dxfFileEntityData.entities[i].type)
+        jsonEntityProperties = [];
+        for (let j = 0; j < dxfFileEntityData.entities[i].entityProperties.length; j++) {
+            const entityProperty = new EntityProperty(dxfFileEntityData.entities[i].entityProperties[j].propertyType, dxfFileEntityData.entities[i].entityProperties[j].value);
+            jsonEntityProperties.push(entityProperty)
+        }
+
+        switch (dxfFileEntityData.entities[i].type) {
+            case "$EXTMIN":
+                picSize.minX = jsonEntityProperties[jsonEntityProperties.indexOf(" 10")]
+                picSize.minY = jsonEntityProperties[jsonEntityProperties.indexOf(" 20")]
+                break;
+            case "$EXTMAX":
+                picSize.maxX = jsonEntityProperties[jsonEntityProperties.indexOf(" 10")]
+                picSize.maxY = jsonEntityProperties[jsonEntityProperties.indexOf(" 20")]
+                break;
+            case "LINE":
+                entity = new EntityLine(dxfFileEntityData.entities[i].type, jsonEntityProperties);
+                jsonEntities.push(entity);
+                break;
+            case "CIRCLE":
+                entity = new EntityCircle(dxfFileEntityData.entities[i].type, jsonEntityProperties);
+                jsonEntities.push(entity);
+                break;
+            case "ARC":
+                entity = new EntityArc(dxfFileEntityData.entities[i].type, jsonEntityProperties);
+                jsonEntities.push(entity);
+                break;
+            case "ATTDEF":
+                entity = new EntityAttDef(dxfFileEntityData.entities[i].type, jsonEntityProperties);
+                jsonEntities.push(entity);
+                break;
+            case "ATTRIB":
+                entity = new EntityAttRib(dxfFileEntityData.entities[i].type, jsonEntityProperties);
+                jsonEntities.push(entity);
+                break;
+            case "EntityText":
+                entity = new EntityText(dxfFileEntityData.entities[i].type, jsonEntityProperties);
+                jsonEntities.push(entity);
+                break;
+            case "3DFACE":
+                entity = new Entity3DFace(dxfFileEntityData.entities[i].type, jsonEntityProperties);
+                jsonEntities.push(entity);
+                break;
+            case "HATCH":
+                entity = new EntityHatch(dxfFileEntityData.entities[i].type, jsonEntityProperties);
+                jsonEntities.push(entity);
+                break;
+            case "LWPOLYLINE":
+                entity = new EntityLWPolyline(dxfFileEntityData.entities[i].type, jsonEntityProperties);
+                jsonEntities.push(entity);
+                break;
+            case "POINT":
+                entity = new EntityPoint(dxfFileEntityData.entities[i].type, jsonEntityProperties);
+                jsonEntities.push(entity);
+                break;
+            case "SOLID":
+                entity = new EntitySolid(dxfFileEntityData.entities[i].type, jsonEntityProperties);
+                jsonEntities.push(entity);
+                break;
+            default:
+                null;
+        }
+        console.log(jsonEntityProperties);
+    }
+
     master.style.animation = "zoomIn 2s";
     drawSheet.width = window.innerWidth*0.9;
     drawSheet.height = window.innerHeight*0.9;
@@ -474,161 +567,12 @@ function animateCanvas(dxfFileEntityData) {
     drawContext.strokeStyle = "#ffffff";
     drawContext.moveTo (drawSheet.width-200,0);
     drawContext.lineTo(drawSheet.width-200,drawSheet.height);
-
-
-
-    let entitiesArray = [];
-
-    let entityproperty = [];
-    entityproperty.push(new EntityProperty(' 10',10));
-    entityproperty.push(new EntityProperty(' 20',10));
-    entityproperty.push(new EntityProperty(' 11',10));
-    entityproperty.push(new EntityProperty(' 21',100));
-    const entity = new EntityLine("LINE",entityproperty);
-
-    entityproperty = []
-    entityproperty.push(new EntityProperty(' 10',10));
-    entityproperty.push(new EntityProperty(' 20',100));
-    entityproperty.push(new EntityProperty(' 11',100));
-    entityproperty.push(new EntityProperty(' 21',100));
-    const entity1 = new EntityLine("LINE",entityproperty);
-
-    entityproperty = [];
-    entityproperty.push(new EntityProperty(' 10',100));
-    entityproperty.push(new EntityProperty(' 20',100));
-    entityproperty.push(new EntityProperty(' 11',100));
-    entityproperty.push(new EntityProperty(' 21',10));
-    const entity2 = new EntityLine("LINE",entityproperty);
-
-    entityproperty = [];
-    entityproperty.push(new EntityProperty(' 10',100));
-    entityproperty.push(new EntityProperty(' 20',10));
-    entityproperty.push(new EntityProperty(' 11',10));
-    entityproperty.push(new EntityProperty(' 21',10));
-    const entity3 = new EntityLine("LINE",entityproperty);
-
-    entityproperty = [];
-    entityproperty.push(new EntityProperty(' 10',200));
-    entityproperty.push(new EntityProperty(' 20',200));
-    entityproperty.push(new EntityProperty(' 39',10));
-    entityproperty.push(new EntityProperty(' 40',100));
-    const entity4 = new EntityCircle("CIRCLE",entityproperty);
-
-//ARC = CIRCLE csak több az átanadó paraméter. A Circle legyen általános osztály szinten.
-
-    entityproperty = [];
-    entityproperty.push(new EntityProperty(' 10',300));
-    entityproperty.push(new EntityProperty(' 20',300));
-    entityproperty.push(new EntityProperty(' 39',10));
-    entityproperty.push(new EntityProperty(' 40',100));
-    entityproperty.push(new EntityProperty(' 50',10));
-    entityproperty.push(new EntityProperty(' 51',150));
-    const entity5 = new EntityArc("ARC",entityproperty);
-
-
-    entityproperty = [];
-    entityproperty.push(new EntityProperty(' 1',"Szeretjük a mézet"));
-    entityproperty.push(new EntityProperty(' 10',300));
-    entityproperty.push(new EntityProperty(' 20',200));
-    entityproperty.push(new EntityProperty(' 40',15));
-    const entity6 = new EntityAttDef("ATTDEF",entityproperty);
-
-    entityproperty = [];
-    entityproperty.push(new EntityProperty(' 1',"De csak néha"));
-    entityproperty.push(new EntityProperty(' 10',200));
-    entityproperty.push(new EntityProperty(' 20',200));
-    entityproperty.push(new EntityProperty(' 40',15));
-    const entity7 = new EntityAttRib("ATTRIB",entityproperty);
-
-    entityproperty = [];
-    entityproperty.push(new EntityProperty(' 1',"Sima szöveg"));
-    entityproperty.push(new EntityProperty(' 10',300));
-    entityproperty.push(new EntityProperty(' 20',120));
-    entityproperty.push(new EntityProperty(' 40',20));
-    const entity8 = new EntityText("TEXT",entityproperty);
-
-    entityproperty = [];
-    entityproperty.push(new EntityProperty(' 10',290));
-    entityproperty.push(new EntityProperty(' 20',290));
-    entityproperty.push(new EntityProperty(' 11',300));
-    entityproperty.push(new EntityProperty(' 21',290));
-    entityproperty.push(new EntityProperty(' 12',340));
-    entityproperty.push(new EntityProperty(' 22',340));
-    entityproperty.push(new EntityProperty(' 13',280));
-    entityproperty.push(new EntityProperty(' 23',250));
-    entityproperty.push(new EntityProperty(' 70',0));
-    const entity9 = new Entity3DFace("3DFACE",entityproperty);
-
-    entityproperty = [];
-    entityproperty.push(new EntityProperty(' 10',0));
-    entityproperty.push(new EntityProperty(' 20',0));
-    entityproperty.push(new EntityProperty(' 41',0));
-    entityproperty.push(new EntityProperty(' 10',600));
-    entityproperty.push(new EntityProperty(' 20',270));
-    entityproperty.push(new EntityProperty(' 41',-0.12));
-    entityproperty.push(new EntityProperty(' 10',700));
-    entityproperty.push(new EntityProperty(' 20',210));
-    entityproperty.push(new EntityProperty(' 41',));
-    entityproperty.push(new EntityProperty(' 10',650));
-    entityproperty.push(new EntityProperty(' 20',400));
-    entityproperty.push(new EntityProperty(' 41',0.05));
-    const entity10 = new EntityHatch("HATCH",entityproperty);
-
-    entityproperty = [];
-    entityproperty.push(new EntityProperty(' 10',0));
-    entityproperty.push(new EntityProperty(' 20',0));
-    entityproperty.push(new EntityProperty(' 41',0));
-    entityproperty.push(new EntityProperty(' 10',600));
-    entityproperty.push(new EntityProperty(' 20',270));
-    entityproperty.push(new EntityProperty(' 41',0));
-    entityproperty.push(new EntityProperty(' 10',700));
-    entityproperty.push(new EntityProperty(' 20',210));
-    entityproperty.push(new EntityProperty(' 41',0));
-    entityproperty.push(new EntityProperty(' 10',650));
-    entityproperty.push(new EntityProperty(' 20',400));
-    entityproperty.push(new EntityProperty(' 41',0));
-    const entity11 = new EntityHatch("HATCH",entityproperty);
-
-    entityproperty = [];
-    entityproperty.push(new EntityProperty(' 70',0));
-    entityproperty.push(new EntityProperty(' 10',500));
-    entityproperty.push(new EntityProperty(' 20',500));
-    entityproperty.push(new EntityProperty(' 42',1.1));
-    entityproperty.push(new EntityProperty(' 10',600));
-    entityproperty.push(new EntityProperty(' 20',600));
-    entityproperty.push(new EntityProperty(' 42',0));
-    entityproperty.push(new EntityProperty(' 10',550));
-    entityproperty.push(new EntityProperty(' 20',600));
-    entityproperty.push(new EntityProperty(' 42',0));
-    entityproperty.push(new EntityProperty(' 10',550));
-    entityproperty.push(new EntityProperty(' 20',600));
-    entityproperty.push(new EntityProperty(' 42',0));
-    const entity12 = new EntityLWPolyline("LWPOLYLINE",entityproperty);
-
-
-
-    entitiesArray.push(entity);
-    entitiesArray.push(entity1);
-    entitiesArray.push(entity2);
-    entitiesArray.push(entity3);
-    entitiesArray.push(entity4);
-    entitiesArray.push(entity5);
-    entitiesArray.push(entity6);
-    entitiesArray.push(entity7);
-    entitiesArray.push(entity8);
-    entitiesArray.push(entity9);
-    entitiesArray.push(entity10);
-    //entitiesArray.push(entity11);
-    entitiesArray.push(entity12);
+    drawContext.stroke();
 
     setTimeout(function () {
-        entitiesArray.forEach(write);
+        jsonEntities.forEach(write);
     }, 2000);
 
-
-    setTimeout(function () {
-        entitiesArray.forEach(write);
-    }, 2000);
 
 
     function write(value) {
@@ -636,5 +580,7 @@ function animateCanvas(dxfFileEntityData) {
         drawSheet.style.visibility = "visible";
         master.style.visibility = "hidden";
     }
+
+
 
 }

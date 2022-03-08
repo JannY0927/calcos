@@ -62,6 +62,12 @@ public class DxfFile {
             System.out.println("isEntities "+isEntities+" isStartEnt "+isStartEnt+" isMainType "+isMainType + " isPropertyType " + isPropertyType);
             System.out.println(row);
 
+            if (row.equals("$EXTMIN") ||row.equals("$EXTMAX")) {
+                isStartEnt = true;
+                isMainType = true;
+                isEntities=true;
+            }
+
             if (!waitNextRow&&isStartEnt&&isMainType) {
                 entity = new Entity();
                 entity.setType(row);
@@ -86,7 +92,7 @@ public class DxfFile {
                 }
             }
             if (!waitNextRow&&isEntities) {
-                if (row.equals("  0")) {
+                if (row.equals("  0")||row.equals("  9")) {
                     isStartEnt = true;
                     isMainType = true;
                     waitNextRow = true;
@@ -94,6 +100,10 @@ public class DxfFile {
             }
             if (row.equals("ENTITIES")) isEntities=true;
             if (row.equals("ENDSEC")) isEntities=false;
+            if (row.equals("  9")) {
+                isStartEnt = false;
+                isEntities=false;
+            }
             System.out.println("isEntities "+isEntities+" isStartEnt "+isStartEnt+" isMainType "+isMainType + " isPropertyType " + isPropertyType);
             row = br.readLine();
         }
