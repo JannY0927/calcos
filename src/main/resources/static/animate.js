@@ -4,15 +4,15 @@ let master = document.getElementById('master');
 let defaultLineWidth = 3;
 
 class DXFFile  {
-    constructor(fileName,Entities,mySize) {
+    constructor(fileName,Entities,mySize,screenSizeX,screenSizeY) {
         this.fileName = fileName;
         this.Entities = Entities;
         this.mySize = mySize;
-    }
-
-    getMyRate(screenSize) {
-
-    }
+        this.dxfScreenRate = {x: screenSizeX /(this.mySize.maxX - this.mySize.minX),
+			     			  y: screenSizeY /(this.mySize.maxY - this.mySize.minY)};
+		this.dxfShiftValue = {x: 0-mySize.minX,
+							  y: 0-mySize.minY}		     			 
+	}
 }
 
 
@@ -375,7 +375,7 @@ class Entity3DFace extends Entity {
         }
         if (binaryLineVisibility.charAt(2)==='0') {
             console.log('2line');
-            drawContext.moveTo(this.findValue(' 11'),    this.findValue(' 21'))
+            drawContext.moveTo(this.findValue(' 11'),this.findValue(' 21'))
             drawContext.lineTo(this.findValue(' 12'),this.findValue(' 22'))
         }
         if (binaryLineVisibility.charAt(1)==='0') {
@@ -486,23 +486,44 @@ function animateCanvas(dxfFileEntityData) {
     let jsonEntities = [];
     let jsonEntityProperties = [];
     picSize = {minX : 0,minY:0, maxX : 0,maxY:0};
+    
+    master.style.animation = "zoomIn 2s";
+    drawSheet.width = window.innerWidth*0.9;
+    drawSheet.height = window.innerHeight*0.9;
+    
+    picSize.minX = dxfFileEntityData.entities[0].entityProperties[1];
+    picSize.minY = dxfFileEntityData.entities[0].entityProperties[2];
+    picSize.maxX = dxfFileEntityData.entities[1].entityProperties[1];
+    picSize.maxY = dxfFileEntityData.entities[1].entityProperties[2];
+    
+    const dxfFilewithEntities = new DXFFile(dxfFileEntityData.filename,jsonEntities,picSize,drawSheet.width,drawSheet.height);
+    
     for (let i = 0;i<dxfFileEntityData.entities.length;i++) {
         console.log("Entiti", dxfFileEntityData.entities[i].type)
         jsonEntityProperties = [];
         for (let j = 0; j < dxfFileEntityData.entities[i].entityProperties.length; j++) {
             const entityProperty = new EntityProperty(dxfFileEntityData.entities[i].entityProperties[j].propertyType, dxfFileEntityData.entities[i].entityProperties[j].value);
+            console.log("entityProperty",entityProperty);
+            console.log("rate",dxfFilewithEntities.dxfScreenRate, " " ,dxfFilewithEntities.dxfShiftValue)
+            if (dxfFileEntityData.entities[i].type != "$EXTMAX" ||dxfFileEntityData.entities[i].type != "$EXTMIN")
+	            if (entityProperty.propertyType === " 10") {
+					console.log("xes",entityProperty.propertyValue)
+	            	entityProperty.propertyValue = Number(entityProperty.propertyValue) + Number(dxfFilewithEntities.dxfShiftValue.x);
+					console.log("xes1",entityProperty.propertyValue," EGYEbe ",Number(entityProperty.propertyValue)," !",Number(dxfFilewithEntities.dxfShiftValue.x))
+	            	entityProperty.propertyValue = Number(entityProperty.propertyValue) * Number(dxfFilewithEntities.dxfScreenRate.x);
+					console.log("xes2",entityProperty.propertyValue)
+	            }
+	            if (entityProperty.propertyType === " 20") { 
+					console.log("yes",entityProperty.propertyValue)
+	            	entityProperty.propertyValue = Number(entityProperty.propertyValue) + Number(dxfFilewithEntities.dxfShiftValue.y);
+					console.log("yes1",entityProperty.propertyValue)
+	            	entityProperty.propertyValue = Number(entityProperty.propertyValue) * Number(dxfFilewithEntities.dxfScreenRate.y);
+					console.log("yes2",entityProperty.propertyValue)
+	            }
             jsonEntityProperties.push(entityProperty)
         }
 
         switch (dxfFileEntityData.entities[i].type) {
-            case "$EXTMIN":
-                picSize.minX = jsonEntityProperties[jsonEntityProperties.indexOf(" 10")]
-                picSize.minY = jsonEntityProperties[jsonEntityProperties.indexOf(" 20")]
-                break;
-            case "$EXTMAX":
-                picSize.maxX = jsonEntityProperties[jsonEntityProperties.indexOf(" 10")]
-                picSize.maxY = jsonEntityProperties[jsonEntityProperties.indexOf(" 20")]
-                break;
             case "LINE":
                 entity = new EntityLine(dxfFileEntityData.entities[i].type, jsonEntityProperties);
                 jsonEntities.push(entity);
@@ -552,7 +573,9 @@ function animateCanvas(dxfFileEntityData) {
         }
         console.log(jsonEntityProperties);
     }
-
+    
+    
+    
     master.style.animation = "zoomIn 2s";
     drawSheet.width = window.innerWidth*0.9;
     drawSheet.height = window.innerHeight*0.9;
@@ -570,7 +593,7 @@ function animateCanvas(dxfFileEntityData) {
     drawContext.stroke();
 
     setTimeout(function () {
-        jsonEntities.forEach(write);
+        dxfFilewithEntities.Entities.forEach(write);
     }, 2000);
 
 
