@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0, maximum-scale=3.0,user-scalable=yes">
     <title>iCalc</title>
     <link rel="stylesheet" href="icalc.css">
+    <script type="text/javascript" defer src="animate.js"></script>
+    <script type="text/javascript" defer src="index.js"></script>
+    <script type="text/javascript" src="dxffile.js"></script>
 </head>
 <body>
-    <button type="button" onclick="animateCanvas()">Click me to display Date and Time.</button>
+    <button type="button" onclick="location.href='index.html';">Let's start again</button>
     <div id="master">
         <div id="box_cursor"><p class="cursor">Last login: NOW from 192.168.0.1<br>h776766@linux1:~$ Hello!</p></div>
         <div id="box_cursor1"><p class="cursor">h776766@linux1:~$ My name is iCalc.</p></div>
@@ -31,7 +34,5 @@
         </div>
     </div>
     <canvas id="sheet_backdraw"></canvas>
-    <script type="text/javascript" defer src="animate.js"></script>
-    <script defer type="text/javascript"  src="index.js"></script>
-  <!--  <script defer type="text/javascript"  src="Entity.js"></script> -->
+  <!--  <script defer type="text/javascript"  src="entity.js"></script> -->
 </body>

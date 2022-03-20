@@ -3,6 +3,7 @@ package hu.f3fu1m.icalcv0;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,13 +21,17 @@ public class FileController {
     FileService fileService;
 
 
+    @Value("${app.upload.dir:${user.home}}")
+    public String uploadDir;
+
+
     @PostMapping(value = "/upload")
     public String uploadFile(@RequestParam("files") MultipartFile formData, RedirectAttributes redirectAttributes) throws IOException {
         System.out.println("contorller");
         fileService.upload(formData);
         System.out.println(formData.getOriginalFilename());
         DxfFile uploadedFile = new DxfFile(formData.getOriginalFilename());
-        uploadedFile.readFile("src/main/resources/static/"+formData.getOriginalFilename());
+        uploadedFile.readFile(uploadDir+"/"+formData.getOriginalFilename());
 //        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(uploadedFile.toJson());
         
 //        response.setContentType("application/json");

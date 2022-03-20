@@ -1,0 +1,13 @@
+000 FULL Exception kezelés!!! Fontos!!!
+
+1 Nem elég pontos a JS float kezelése. Az arányosítást át kell tenni BA oldalra.
+    - A ARC-nál derült ki a Ceco.NET-Equipment-Sports-Gym-Fitness-Tm-431.dxf fájllal. A focikap 16osánál lévő arcot nagyon eltolja a kaputol
+Megoldva
+
+2 HAtchnél a 2-3 arc és elipsz típus lekezelése
+3 Spline kezelése
+4 Vport lekezelése/ vizsgálat hogy kell
+5 Mtext + text szöveg irány
+6 PolyLine Görbe vonalnál hiba van
+7 Gomb nyomásra start again without animation
+8 
