@@ -1,3 +1,7 @@
+import {animateCanvas,logLevel} from './animate.js';
+
+
+
 function basicAttch() {
 
     const dropArea = document.querySelector(".drag-area"),
@@ -5,7 +9,7 @@ function basicAttch() {
           input = dropArea.querySelector(".box__file");
     let file;
 
-    console.log("fileType: ")
+    logLevel > 0 ? console.log("fileType: "):null
 
     input.addEventListener("change", function(){
         file = this.files[0];
@@ -23,7 +27,7 @@ function basicAttch() {
     //If user leave dragged File from DropArea
     dropArea.addEventListener("dragleave", ()=>{
         dropArea.classList.remove("active");
-        dragText.textContent = "Choose The DXF file or drag it here.";
+        dragText.textContent = "Choose The DXF file and drag it here.";
     });
 
     //result backwrite
@@ -36,7 +40,7 @@ function basicAttch() {
         for (const i of  event.dataTransfer.files) {
             if (i.name.includes('.dxf')  || i.name.includes('.DXF')) {
                 formData.append('files', i);
-                console.log(formData)
+                logLevel > 0 ? console.log(formData):null
             }
             else
             {
@@ -52,9 +56,11 @@ function basicAttch() {
         })
             .then(response=> response.json())
             .then(data => animateCanvas(data));
-        console.log("Json full",dxfToJson);
-        console.log(dxfToJson.filename);
+        logLevel > 0 ? console.log("Json full",dxfToJson) : null;
+        logLevel > 0 ? console.log(dxfToJson.filename) : null;
         //setTimeout(function(){ window.location.replace("/result.html") }, 1000);
     });
 
 }
+
+export { basicAttch};

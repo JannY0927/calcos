@@ -32,9 +32,6 @@ public class FileController {
         System.out.println(formData.getOriginalFilename());
         DxfFile uploadedFile = new DxfFile(formData.getOriginalFilename());
         uploadedFile.readFile(uploadDir+"/"+formData.getOriginalFilename());
-//        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(uploadedFile.toJson());
-        
-//        response.setContentType("application/json");
         
         return uploadedFile.toJson();
     }
@@ -50,19 +47,6 @@ public class FileController {
     public void result(DxfFile uploadedFile) throws IOException {
         System.out.println("contorller");
         System.out.println( uploadedFile.getFilename());
-        //uploadedFile.
-
-     //   fileService.upload(formData);
-     //   System.out.println(formData.getOriginalFilename());
-    //    List<Entity> entities = new ArrayList<>();
-     //   uploadedFile.readFile("src/main/resources/static/"+formData.getOriginalFilename());
     }
 
-  /*  @PostMapping("/upload")
-    public String uploadFile() throws IOException {
-        dxfParser rowom = new dxfParser("src/main/resources/static/teszt.dxf");
-        String jani = dxfParser.readFile(rowom.getFilename());
-        System.out.println("Mi a ..." + jani);
-    return "Jeee";
-    }*/
 }

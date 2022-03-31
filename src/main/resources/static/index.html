@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0, maximum-scale=3.0,user-scalable=yes">
     <title>iCalc</title>
     <link rel="stylesheet" href="icalc.css">
-    <script type="text/javascript" defer src="animate.js"></script>
-    <script type="text/javascript" defer src="index.js"></script>
-    <script type="text/javascript" src="dxffile.js"></script>
+    <script type="module" defer src="main.js"></script>
 </head>
 <body>
     <button type="button" onclick="location.href='index.html';">Let's start again</button>
@@ -26,7 +24,7 @@
                         </svg>
                         <input class="box__file" type="file" name="files[]" id="file" data-multiple-caption="{count} files selected" multiple />
                         <label id="labelforfile" for="file"><strong>Choose The DXF file</strong>
-                            <span class="box__dragndrop"> or drag it here</span>.
+                            <span class="box__dragndrop">and drag it here</span>.
                         </label>
                     </div>
                 </form>
@@ -34,5 +32,4 @@
         </div>
     </div>
     <canvas id="sheet_backdraw"></canvas>
-  <!--  <script defer type="text/javascript"  src="entity.js"></script> -->
 </body>

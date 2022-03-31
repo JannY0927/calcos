@@ -326,7 +326,15 @@ class EntityHatch extends Entity {
     getAllPoints(){
         let points = [];
         console.log("ActiualpointsLEEEETTTT",points);
-        let point = {startX:null,startY:null,endX:null,endY:null,hatchType:null};
+        let point = {startX:null,
+                     startY:null,
+                     endX:null,
+                     endY:null,
+                     radius:null,
+                     startrato:null,
+                     endrato:null,
+                     clockWise:null,
+                     hatchType:null};
         let hatchType = null;
         console.log("this.Entityproperties HaTCH", this.Entityproperties);
         for (let i=0;i< this.Entityproperties.length;i++) {
@@ -358,8 +366,6 @@ class EntityHatch extends Entity {
                 console.log('HAtch rajz hatchType1 POINT before1',point);
 
                 if (point.startX != null && point.startY != null&&(this.Entityproperties[i].propertyType === ' 42'||this.Entityproperties[i].propertyType === ' 10')) {
-                    point.endX = null;
-                    point.endY = null;
                     this.Entityproperties[i].propertyType === ' 42' ? point.b = this.Entityproperties[i].propertyValue == null ? 0.0 : this.Entityproperties[i].propertyValue : null;
                     point.hatchType = hatchType;
                     console.log("hatchType push előtt",hatchType,"point.hatchType",hatchType,'point',point.hatchType);
@@ -374,6 +380,33 @@ class EntityHatch extends Entity {
                 console.log('HAtch rajz hatchType1 POINT after',point);
 
             }
+            //Arc rajzolás
+            if (hatchType === '     2') {
+                console.log('HAtch rajz hatchType2',this.Entityproperties[i].propertyType,this.Entityproperties[i].propertyValue);
+                console.log('HAtch rajz hatchType2 POINT before1',point);
+
+                if (point.startX != null && point.startY != null && point.radius != null && point.startrato != null &&
+                    point.endrato != null &&
+                    (this.Entityproperties[i].propertyType === ' 73'||this.Entityproperties[i].propertyType === ' 10'))
+                {
+                    point.hatchType = hatchType;
+                    this.Entityproperties[i].propertyType === ' 73' ? point.clockWise = this.Entityproperties[i].propertyValue == null ? true : this.Entityproperties[i].propertyValue : null;
+                    console.log("hatchType push előtt",hatchType,"point.hatchType",hatchType,'point',point.hatchType);
+                    points.push(point)
+                    console.log("hatchType push után",hatchType,"point.hatchType",hatchType,'point',point.hatchType);
+                    point = {};
+                    console.log("pont törlés után",point);
+                }
+                console.log('HAtch rajz hatchType2 POINT before2',point);
+                this.Entityproperties[i].propertyType === ' 10' ? point.startX = this.Entityproperties[i].propertyValue == null ? 0.0 : this.Entityproperties[i].propertyValue : null;
+                this.Entityproperties[i].propertyType === ' 20' ? point.startY = this.Entityproperties[i].propertyValue == null ? 0.0 : this.Entityproperties[i].propertyValue : null;
+                this.Entityproperties[i].propertyType === ' 40' ? point.radius = this.Entityproperties[i].propertyValue == null ? 0.0 : this.Entityproperties[i].propertyValue : null;
+                this.Entityproperties[i].propertyType === ' 50' ? point.startrato = this.Entityproperties[i].propertyValue == null ? 0.0 : this.Entityproperties[i].propertyValue : null;
+                this.Entityproperties[i].propertyType === ' 51' ? point.endrato = this.Entityproperties[i].propertyValue == null ? 0.0 : this.Entityproperties[i].propertyValue : null;
+                console.log('HAtch rajz hatchType2 POINT after',point);
+            }
+
+
             console.log("Actiualpoints",points);
         }
         console.log("Allpoints",points);
@@ -396,24 +429,6 @@ class EntityHatch extends Entity {
             let p2 = null;
 
             logLevel > 5 ? console.log("Jani" ,p1, "masik",points[(points.length) - 1]) : null;
-            /*if (p1 !== points[(points.length) - 1]) {
-                p2 = points[i + 1];
-            } else {
-                p2 = points[0];
-            }
-            //console.log("p1",p1,"plen",points.length);
-            //console.log("p2",p2);
-            if (p1.b === 0.0 || p1.b == null) {
-                console.log("WithoutB p1",p1,"p2",p2);
-                drawContext.beginPath();
-                drawContext.moveTo(p1.x, p1.y, p1.z);
-                drawContext.lineTo(p2.x, p2.y, p2.z);
-                drawContext.stroke();
-            }
-            if (p1.b > 0.0 || p1.b < 0.0) {
-                console.log("WithB p1",p1,"p2",p2);
-                this.drawBulgeBetweenTwoPoints(p1, p2, drawContext);
-            }*/
             if (points[i].hatchType === '     1') {
                 if (p1 !== points[(points.length) - 1]) {
                     p2 = points[i + 1];
@@ -442,6 +457,21 @@ class EntityHatch extends Entity {
                 console.log(" (points[i].hatchType = '     0') points[i]",points[i].hatchType,points[i]);
                 drawContext.moveTo(points[i].startX, points[i].startY);
                 drawContext.lineTo(points[i].endX, points[i].endY);
+                drawContext.stroke();
+            }
+            if (points[i].hatchType === '     2') {
+                drawContext.beginPath();
+                drawContext.strokeStyle = "#FF0000";
+                console.log("hatch2 LOG",points[i]);
+                drawContext.arc(
+                    points[i].startX,//kezdő pont koordináta
+                    points[i].startY,//kezdő pont koordináta
+                    points[i].radius,//sugár
+                    Math.PI/180*-1*(points[i].startrato-360),//kezdúszög
+                    Math.PI/180*-1*(points[i].endrato-360),//végszög
+                    points[i].clockWise =='1' ? false : true //Extrusion direction (optional; default = 0, 0, 1)
+                );
+                console.log("Siker?");
                 drawContext.stroke();
             }
         }

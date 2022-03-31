@@ -1,0 +1,2 @@
+https://ezdxf.readthedocs.io/en/stable/dxfinternals/filestructure.html
+https://gallery.proficad.eu/tools/AutoCAD-Viewer.aspx

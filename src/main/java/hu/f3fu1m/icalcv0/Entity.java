@@ -55,20 +55,5 @@ public class Entity {
 		sb.append("}\n");
 		return sb.toString();	
 	}
-	
-
-    /*@Override
-    public String toString() {
-        String concatEntProp = null;
-
-        //this.entityProperties.forEach((id)-> id.toString());
-
-
-        for (int i=0;i<this.entityProperties.size();i++) {
-            concatEntProp = entityProperties.get(i).getPropertyType() + ' ' + entityProperties.get(i).getValue() + "||";
-        }
-
-        return "Entities{type=" + this.type + "Prop" + concatEntProp + "}";
-    }*/
     
 }
