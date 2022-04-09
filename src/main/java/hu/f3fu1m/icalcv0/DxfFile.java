@@ -6,11 +6,47 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity
 public class DxfFile {
-    String filename;
-    List<Entity> entities;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE	)
+	private Long id;
+	
+    private String filename;
+	@OneToMany(mappedBy = "dxfFile")
+	@JsonIgnore
+    private List<DxfEntity> entities;
 
+
+	//private EntityPropertyRepository entityPrRepo;
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public List<DxfEntity> getEntities() {
+		return entities;
+	}
+
+	public void setEntities(List<DxfEntity> entities) {
+		this.entities = entities;
+	}
+
+	private DxfFile() {
+	}
+	
     public DxfFile(String filename) {
         this.filename = filename;
         this.entities = new ArrayList<>();
@@ -24,6 +60,7 @@ public class DxfFile {
         this.filename = filename;
     }
 
+    
     public void readFile(String name) throws IOException {
         boolean isEntities = false;
         boolean isStartEnt = false;
@@ -32,7 +69,7 @@ public class DxfFile {
         boolean waitNextRow;
         /*A feldolgozandó felület mérete. ezt meg kell keresni és át kell adni. Ez alapján lehet arányosítani a rajztábla méretét
         drawing.header['$EXTMIN'] = (0, 0, 0) drawing.header['$EXTMAX'] = (100, 100, 0)*/
-        Entity entity;
+        DxfEntity entity;
         List<EntityProperty> entityProperties = null;
         EntityProperty entityProperty;
 
@@ -50,10 +87,9 @@ public class DxfFile {
                 isEntities=true;
             }
             if (isStartEnt&&isMainType) {
-                entity = new Entity();
-                entity.setType(row);
                 entityProperties = new ArrayList<>();
-                entity.setEntityProperties(entityProperties);
+                entity = new DxfEntity(row,entityProperties);
+                //entity.setType();
                 this.entities.add(entity);
                 isMainType = false;
                 isPropertyType = true;
@@ -61,9 +97,9 @@ public class DxfFile {
             }
             if (!waitNextRow&&isStartEnt) {
                 if (isPropertyType){
-                    entityProperty = new EntityProperty();
+                    entityProperty = new EntityProperty(row,null,this.entities.get(this.entities.size()-1));
+                    //entProp.save(entityProperty);
                     entityProperties.add(entityProperty);
-                    entityProperties.get(entityProperties.size()-1).setPropertyType(row);
                     isPropertyType =false;
                 }
                 else {
@@ -89,18 +125,23 @@ public class DxfFile {
         this.entities.remove(this.entities.get(this.entities.size()-1));
 
         System.out.println(this.entities);
-        for (Entity value : this.entities) {
+        for (DxfEntity value : this.entities) {
             System.out.println("Type " + value.getType() + " entitas " + value.getEntityProperties().size());
         }
     }
 
 	public String toJson() {
 		StringBuilder sb = new StringBuilder().append("{\"filename\": \"" + filename + "\",\"entities\": [");
-        System.out.println(sb);
+        //System.out.println(sb);
+        System.out.println("Jani1");
 		entities.forEach(e -> sb.append(e.toJson() + ","));
+        System.out.println("Jani2");
 		sb.setLength(sb.length() - 1);
+        System.out.println("Jani3");
 		sb.append("]");
+        System.out.println("Jani4");
 		sb.append("}");
+        System.out.println("Jani5");
 		return sb.toString();
 	}
     
