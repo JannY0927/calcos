@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class EntityPropertyService {
 
 	EntityPropertyRepository entProp;
-	
+
 	@Autowired
 	public void setEntProp(EntityPropertyRepository entProp) {
 		this.entProp = entProp;

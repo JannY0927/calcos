@@ -6,6 +6,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,15 +18,12 @@ public class FileService {
     @Value("${app.upload.dir:${user.home}}")
     public String uploadDir;
 
-    public void upload(MultipartFile file) {
+    public Path upload(MultipartFile file) throws IOException {
 
-        try {
             System.out.println("FileserviceUpload");
             Path copyLocation = Paths
                     .get(uploadDir + File.separator + StringUtils.cleanPath(file.getOriginalFilename()));
             Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+            return copyLocation;
+            }
 }

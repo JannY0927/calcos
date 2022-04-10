@@ -1,35 +1,36 @@
-package hu.f3fu1m.icalcv0.controller;
+package hu.f3fu1m.icalcv0.Service;
 
 
-import hu.f3fu1m.icalcv0.DxfEntity;
-import hu.f3fu1m.icalcv0.DxfFile;
-import hu.f3fu1m.icalcv0.EntityProperty;
-import hu.f3fu1m.icalcv0.Service.DxfEntityService;
-import hu.f3fu1m.icalcv0.Service.DxfFileService;
-import hu.f3fu1m.icalcv0.Service.FileService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
-public class ParserController {
-    DxfFile dxfFile;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-    public void setDxfFile(DxfFile dxfFile) {
-        this.dxfFile = dxfFile;
-    }
+import hu.f3fu1m.icalcv0.Repository.DxfEntityRepository;
+import hu.f3fu1m.icalcv0.Repository.DxfFileRepository;
+import hu.f3fu1m.icalcv0.Repository.EntityPropertyRepository;
+import hu.f3fu1m.icalcv0.model.DxfEntity;
+import hu.f3fu1m.icalcv0.model.DxfFile;
+import hu.f3fu1m.icalcv0.model.EntityProperty;
 
-    public DxfFile getDxfFile() {
-        return dxfFile;
-    }
+@Service
+public class ParserServiceImpl implements ParserService {
 
-    public void readFile(String name) throws IOException {
-        DxfFileService dxfFileService;
-        DxfEntityService dxfEntityService;
+	
+	@Autowired
+	DxfFileRepository dxfFileRepository;
+	@Autowired
+	DxfEntityRepository dxfEntityRepository;
+	@Autowired
+	EntityPropertyRepository entityPropertyRepository;
+
+	@Override
+	public DxfFile parse(Path path, String originalFilename) throws IOException {
         boolean isEntities = false;
         boolean isStartEnt = false;
         boolean isMainType;
@@ -37,13 +38,15 @@ public class ParserController {
         boolean waitNextRow;
         /*A feldolgozandó felület mérete. ezt meg kell keresni és át kell adni. Ez alapján lehet arányosítani a rajztábla méretét
         drawing.header['$EXTMIN'] = (0, 0, 0) drawing.header['$EXTMAX'] = (100, 100, 0)*/
-        DxfEntity entity;
+        DxfEntity entity=null;
+        DxfFile dxfFile = new DxfFile(originalFilename);
+        dxfFileRepository.save(dxfFile);
         List<EntityProperty> entityProperties = null;
-        EntityProperty entityProperty;
+        EntityProperty entityProperty=null;
 
-        System.out.println("Mit nem talál: "+name);
+        System.out.println("Mit nem talál: "+path.toString());
 
-        BufferedReader br = new BufferedReader(new FileReader(name));
+        BufferedReader br = new BufferedReader(new FileReader(path.toFile()));
         String row = br.readLine();
 
         isMainType = false;
@@ -56,9 +59,9 @@ public class ParserController {
             }
             if (isStartEnt&&isMainType) {
                 entityProperties = new ArrayList<>();
-                entity = new DxfEntity(row,entityProperties);
-                //entity.setType();
-                this.dxfFile.getEntities().add(entity);
+                entity = new DxfEntity(row,entityProperties,dxfFile);
+                dxfEntityRepository.save(entity);
+                dxfFile.getEntities().add(entity);
 
                 isMainType = false;
                 isPropertyType = true;
@@ -66,13 +69,14 @@ public class ParserController {
             }
             if (!waitNextRow&&isStartEnt) {
                 if (isPropertyType){
-                    entityProperty = new EntityProperty(row,null,this.dxfFile.getEntities().get(this.dxfFile.getEntities().size()-1));
+                    entityProperty = new EntityProperty(row,null,entity);
                     //entProp.save(entityProperty);
+                    entityPropertyRepository.save(entityProperty);
                     entityProperties.add(entityProperty);
                     isPropertyType =false;
                 }
                 else {
-                    entityProperties.get(entityProperties.size()-1).setValue(row);
+                    entityProperty.setValue(row);
                     isPropertyType =true;
                 }
             }
@@ -91,12 +95,14 @@ public class ParserController {
             row = br.readLine();
         }
         //EOSként létrehozott elem eltávolítása
-        this.dxfFile.getEntities().remove(this.dxfFile.getEntities().get(this.dxfFile.getEntities().size()-1));
-
-        System.out.println(this.dxfFile.getEntities());
-        for (DxfEntity value : this.dxfFile.getEntities()) {
+        dxfFile.getEntities().remove(dxfFile.getEntities().get(dxfFile.getEntities().size()-1));
+       
+        
+        System.out.println(dxfFile.getEntities());
+        for (DxfEntity value : dxfFile.getEntities()) {
             System.out.println("Type " + value.getType() + " entitas " + value.getEntityProperties().size());
         }
-    }
-
+        return dxfFile;
+		
+	}
 }

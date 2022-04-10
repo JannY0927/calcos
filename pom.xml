@@ -12,7 +12,7 @@
     <artifactId>iCalcV0</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>iCalcV0</name>
-    <description>Demo project for Spring Boot</description>
+    <description>F3FU1M szakdolgozat</description>
     <properties>
         <java.version>11</java.version>
     </properties>
