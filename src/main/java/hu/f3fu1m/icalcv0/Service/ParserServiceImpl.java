@@ -71,7 +71,7 @@ public class ParserServiceImpl implements ParserService {
                 if (isPropertyType){
                     entityProperty = new EntityProperty(row,null,entity);
                     //entProp.save(entityProperty);
-                    entityPropertyRepository.save(entityProperty);
+                    //entityPropertyRepository.save(entityProperty);
                     entityProperties.add(entityProperty);
                     isPropertyType =false;
                 }

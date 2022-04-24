@@ -11,3 +11,8 @@ Megoldva
 6 PolyLine Görbe vonalnál hiba van
 7 Gomb nyomásra start again without animation
 8 
+
+
+
+A témavezertőhöz mehet az hogy Informatikai szoftverfejlesztő vagy más titulust szeretnél?
+A DB nagyon lassú. Kiremeltem a entity_property tárolást service\ParserServiceImpl.java a 73. sorba. Van esetleg rá ötleted hogyan lehet gyorsítani?
