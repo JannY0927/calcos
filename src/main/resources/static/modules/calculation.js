@@ -1,27 +1,26 @@
-function fitCircleToPoints(x1, y1, x2, y2, x3, y3) {
-    var x, y, u;
-    const slopeA = (x2 - x1) / (y1 - y2); // slope of vector from point 1 to 2
-    const slopeB = (x3 - x2) / (y2 - y3); // slope of vector from point 2 to 3
-    if (slopeA === slopeB) {
+function fitCircleToPoints(p1x, p1y, p2x, p2y, p3x, p3y) {
+    var a, b, c;
+    var leanA = (p2x-p1x)/(p1y-p2y);
+    const leanB = (p3x-p2x) / (p2y-p3y);
+    if (leanA === leanB) {
         return
-    } // Slopes are same thus 3 points form striaght line. No circle can fit.
-    if (y1 === y2) {   // special case with points 1 and 2 have same y
-        x = ((x1 + x2) / 2);
-        y = slopeB * x + (((y2 + y3) / 2) - slopeB * ((x2 + x3) / 2));
-    } else if (y2 === y3) { // special case with points 2 and 3 have same y
-        x = ((x2 + x3) / 2);
-        y = slopeA * x + (((y1 + y2) / 2) - slopeA * ((x1 + x2) / 2));
-    } else {
-        x = ((((y2 + y3) / 2) - slopeB * ((x2 + x3) / 2)) - (u = ((y1 + y2) / 2) - slopeA * ((x1 + x2) / 2))) / (slopeA - slopeB);
-        y = slopeA * x + u;
     }
-    logLevel >5 ? console.log(x,y):null;
+    if (p1y===p2y) {
+        a = (p1x/2+p2x/2);
+        b = leanB*a+((p2y/2+p3y/2) - leanB * (p2x/2 + p3x/2));
+    } else if (p2y === p3y) {
+        a = (p2x/2+p3x/2);
+        b = leanA*a+((p1y/2+p2y/2)-leanA*(p1x/2+p2x/2));
+    } else {
+        c = c = (p1y/2+p2y/2)-leanA*(p1x/2 + p2x/2);
+        a = (((p2y/2+p3y/2)-leanB*(p2x/2+p3x/2))-(c))/(leanA-leanB);
+        b = leanA*a+c;
+    }
+    logLevel >5 ? console.log(a,b):null;
     return {
-        x, y,
-        radius: ((x1 - x) ** 2 + (y1 - y) ** 2) ** 0.5
+        x: a, y: b,
+        radius: ((p1x-a)**2+(p1y-b)**2)**0.5
     };
-
-
 }
 
 export {fitCircleToPoints};

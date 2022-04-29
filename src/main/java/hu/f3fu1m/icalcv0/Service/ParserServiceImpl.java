@@ -60,7 +60,7 @@ public class ParserServiceImpl implements ParserService {
             if (isStartEnt&&isMainType) {
                 entityProperties = new ArrayList<>();
                 entity = new DxfEntity(row,entityProperties,dxfFile);
-                dxfEntityRepository.save(entity);
+                //dxfEntityRepository.save(entity);
                 dxfFile.getEntities().add(entity);
 
                 isMainType = false;
