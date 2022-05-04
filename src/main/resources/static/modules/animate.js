@@ -20,7 +20,7 @@ let defaultLineWidth = 1;
 //Ha a loglevel > 0  Uploaddal kapcsolatos logok jelennek meg + A javaból visszajött parsolt file információk
 //Ha a loglevel > 1  A Entitások kirajzolás logok jelenek meg
 //Ha a loglevel > 2  A Entitások arányosítandó tulajdonságai jelennek meg kirajzolás logok jelenek meg
-let logLevel = 5;
+let logLevel = 1;
 
 
 //KI kell találni hova kerül az arány, és melyik részét hogyan fogom tudni írni.
@@ -154,6 +154,8 @@ function animateCanvas(dxfFileEntityData) {
 
     setTimeout(function () {
        dxfFilewithEntities.Entities.forEach(write);
+       var today = new Date();
+       console.log(today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()+ ":" + today.getMilliseconds());
     }, 2000);
 
 

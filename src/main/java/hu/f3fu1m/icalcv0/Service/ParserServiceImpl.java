@@ -37,10 +37,10 @@ public class ParserServiceImpl implements ParserService {
         boolean isPropertyType = true;
         boolean waitNextRow;
         /*A feldolgozandó felület mérete. ezt meg kell keresni és át kell adni. Ez alapján lehet arányosítani a rajztábla méretét
-        drawing.header['$EXTMIN'] = (0, 0, 0) drawing.header['$EXTMAX'] = (100, 100, 0)*/
+        drawing.header['$EXTMIN'] = (0, 0, 0) drawing.header['$EXTMAX'] = (1     00, 100, 0)*/
         DxfEntity entity=null;
         DxfFile dxfFile = new DxfFile(originalFilename);
-        dxfFileRepository.save(dxfFile);
+        //dxfFileRepository.save(dxfFile);
         List<EntityProperty> entityProperties = null;
         EntityProperty entityProperty=null;
 

@@ -50,6 +50,8 @@ function basicAttch() {
             }
         }
         dragText.textContent = "Let's work";
+        var today = new Date();
+        console.log(today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()+ ":" + today.getMilliseconds());
         fetch("/upload", {
             method: "POST",
             body: formData

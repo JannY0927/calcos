@@ -46,20 +46,6 @@ public class FileController {
         return parserService.parse(path,formData.getOriginalFilename()).toJson();
     }
 
-    @GetMapping("/result")
-    public String result(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
-        model.addAttribute("name", name);
-        return "greeting";
-    }
-
-
-    @PostMapping("/jani")
-    public void result(DxfFile uploadedFile) throws IOException {
-        System.out.println("contorller");
-        System.out.println( uploadedFile.getFilename());
-    }
-   
-
     private Path copy(MultipartFile file) throws IOException {
 
             System.out.println("FileserviceUpload");

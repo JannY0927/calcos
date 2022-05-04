@@ -1,3 +1,5 @@
+import {logLevel} from "./animate.js";
+
 function fitCircleToPoints(p1x, p1y, p2x, p2y, p3x, p3y) {
     var a, b, c;
     var leanA = (p2x-p1x)/(p1y-p2y);
