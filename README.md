@@ -1,12 +1,12 @@
 # Start
 git clone  [https://github.com/JannY0927/iCalc_V0.git](https://github.com/JannY0927/iCalc_V0.git)
 
-# windows:
+# Run:
 run start.bat
 
 open browser  [http://localhost:8080/](http://localhost:8080/)
 
-# Other:
+# Compile steps:
 mvn compile
 
 mvnw spring-boot:run
