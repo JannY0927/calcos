@@ -2,7 +2,7 @@
 git clone  [https://github.com/JannY0927/iCalc_V0.git](https://github.com/JannY0927/iCalc_V0.git)
 
 # windows:
-run start.bat in iCalc_V0
+run start.bat
 
 open browser  [http://localhost:8080/](http://localhost:8080/)
 
